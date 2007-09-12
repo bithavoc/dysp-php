@@ -1,0 +1,12 @@
+.LABEL
+{
+	font-size:10px;
+	font-weight:bold;
+	width:150px;
+	background-color:#CCCCCC;
+}
+.INPUT_FIELD
+{
+	font-size:10px;
+	width:150px;
+}
