@@ -24,17 +24,15 @@ class dyspContainerControl extends dyspControl
 	
 	protected function OnRender()
 	{
-		return $this->RenderChildren();
+		$this->RenderChildren();
 	}
 	
 	protected function RenderChildren()
 	{
-		$val = "";
 		foreach($this->children as $child)
 		{
-			$val .= $child->Render();
+			$child->Render();
 		}
-		return $val;
 	}
 	
 }//class

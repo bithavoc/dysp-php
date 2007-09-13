@@ -111,7 +111,7 @@ class dyspControl extends dyspRenderable
 	
 	protected  function OnRender()
 	{
-		
+		//Derived classes does not need return anything, just do echo.
 	}//OnRender
 	
 	public function Render()
@@ -120,9 +120,9 @@ class dyspControl extends dyspRenderable
 		$this->OnLoad();
 		if($this->GetVisible())
 		{
-			return $this->OnRender();
+			$this->OnRender();
 		}
-		return "";
+		//return "";
 	}
 	
 	protected function GenerateClientFunctionEventCall($eventName,$eventArg = "''")
@@ -160,7 +160,7 @@ class dyspRenderable
 	}
 	public function Render()
 	{
-		
+		//Derived class does not neet return anything, just do echo.
 	}
 }
 
@@ -175,7 +175,7 @@ class dyspStyleReference extends dyspRenderable
 	public function Render()
 	{
 		$url = $this->url;
-		return "<link rel=\"stylesheet\" type=\"text/css\" href=\"$url\" />";
+		print "<link rel=\"stylesheet\" type=\"text/css\" href=\"$url\" />";
 	}
 }
 ?>

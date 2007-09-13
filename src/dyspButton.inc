@@ -41,7 +41,7 @@ class dyspButton extends dyspControl
 		$text = $this->GetText();
 		$id = $this->GetClientId();
 		$script = $this->GenerateClientFunctionEventCall("Click");
-		return "<input id=\"$id\" name=\"$id\" type=\"button\" onclick=\"javascript:$script\" value=\"$text\"/>";
+		echo "<input id=\"$id\" name=\"$id\" type=\"button\" onclick=\"javascript:$script\" value=\"$text\"/>";
 	} //OnRender method
 	
 	protected function OnLoad()

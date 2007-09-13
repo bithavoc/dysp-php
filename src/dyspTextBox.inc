@@ -32,7 +32,7 @@ class dyspTextBox extends dyspControl
 		{
 			$class = " class=\"$class\" ";
 		}
-		return "<input id=\"$id\" name=\"$id\"$class type=\"text\" value=\"$text\"/>";
+		echo "<input id=\"$id\" name=\"$id\"$class type=\"text\" value=\"$text\"/>";
 	} //OnRender methods
 	
 }//JohanButton class
