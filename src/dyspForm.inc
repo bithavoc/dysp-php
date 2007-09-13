@@ -7,11 +7,13 @@ class dyspForm extends dyspContainerControl
 	private $crypto;
 	private $title;
 	private $headers;//CSS Style List.(Generic Array)
+	
 	public function __construct($id,$cryptoString)
 	{
 		parent::__construct($id);
 		$this->crypto = new dyspCrypto($cryptoString);
 	}
+	
 	public function AddHeadItem(dyspRenderable $item)
 	{
 		if($this->headers == null)
@@ -20,14 +22,17 @@ class dyspForm extends dyspContainerControl
 		}
 		$this->headers[$item->GetId()] = $item;
 	}
+	
 	public function SetTitle($title)
 	{
 		$title = $title;
 	}
+	
 	public function GetForm()
 	{
 		return $this;
 	}
+	
 	protected function OnInit()
 	{
 		$isPostback = $this->IsPostBack();
@@ -47,11 +52,12 @@ class dyspForm extends dyspContainerControl
 		$this->SetAsInitiated();
 		parent::OnInit();
 	}
+	
 	public function Render()
 	{
 		parent::Render();
 	}
-
+	
 	protected function OnRender()
 	{
 		$parts =Explode('/', $_SERVER["PHP_SELF"]);
