@@ -50,32 +50,16 @@ class Form1 extends dyspForm
 	{
 		$this->btnSelf->SetText("Cambio!");
 		$this->btnAuto->SetVisible(false);
-		$name = $this->txtName->GetText();
-		$conn = new  dyboPgConnection("host=localhost dbname=db1 user=postgres password=programador");
-$conn->Open();
-$conn->BeginTransaction();
-$cmd = $conn->CreateCommand();
-//$cmd->SetCommandText("Create table table2(id int,parent_id int);");
-//$cmd->SetCommandText("insert into table1(id) values(50);");
-//$cmd->SetCommandText("insert into table2(id,parent_id) values(1,50);");
-$cmd->SetCommandText("insert into names(name) values('$name');");
-
-$cmd->Execute();
-$conn->CommitTransaction();
-$conn->Close();
 	}
-		public function btninsert_Click()
+	
+	public function btninsert_Click()
 	{
 		$name = $this->txtName->GetText();
 		$conn = new  dyboPgConnection("host=localhost dbname=db1 user=postgres password=programador");
 		$conn->Open();
 		$conn->BeginTransaction();
 		$cmd = $conn->CreateCommand();
-		//$cmd->SetCommandText("Create table table2(id int,parent_id int);");
-		//$cmd->SetCommandText("insert into table1(id) values(50);");
-		//$cmd->SetCommandText("insert into table2(id,parent_id) values(1,50);");
 		$cmd->SetCommandText("insert into names(name) values('$name');");
-
 		$cmd->Execute();
 		$conn->CommitTransaction();
 		$conn->Close();
