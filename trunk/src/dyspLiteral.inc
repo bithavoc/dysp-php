@@ -24,7 +24,7 @@ class dyspLiteral extends dyspControl
 	
 	public function GetText()
 	{
-		return $this->GetViewState()->Get("text","");
+		print $this->GetViewState()->Get("text","");
 	}//GetText method
 	protected function OnRender()
 	{
