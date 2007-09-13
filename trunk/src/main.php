@@ -1,6 +1,7 @@
 <?
 include_once("dyspCommon.inc");
 include_once("dybo/dyboPgConnection.inc");
+include_once("tests/dybo/dyboProductDataManager.inc");
 
 define("DYSP_KEY","fdsfjj32h4hhnzhsz7z767s8s");
 
@@ -61,6 +62,14 @@ class Form1 extends dyspForm
 		$cmd = $conn->CreateCommand();
 		$cmd->SetCommandText("insert into names(name) values('$name');");
 		$cmd->Execute();
+		
+		
+		$productData = new dyboProductDataManager($conn);
+		$newProduct = new ProductDataItem();
+		$newProduct->Name="Jabon las lavez";
+		$newProduct->Price=2334.45;
+		$productData->SaveOne($newProduct);
+		
 		$conn->CommitTransaction();
 		$conn->Close();
 	}
