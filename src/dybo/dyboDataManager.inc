@@ -1,6 +1,6 @@
 <?
-include_once("dybo/dyboConnection.inc");
-include_once("dybo/dyboDataCommand.inc");
+require_once "dyboConnection.inc";
+require_once "dyboDataCommand.inc";
 
 class dyboDataManagerBase
 {

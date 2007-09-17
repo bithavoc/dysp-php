@@ -80,6 +80,8 @@ class dyspControl extends dyspRenderable
 	{
 		$this->clientId = $id;
 	}
+	
+	//when the control is added or dinamically rendered, this method is called.
 	public function Init(dyspControl $parent)
 	{
 		$this->SetViewState($parent->viewState->CreateSubState($this));
@@ -87,6 +89,7 @@ class dyspControl extends dyspRenderable
 		$this->UpdateClientId();
 		$this->OnInit();
 	}
+	
 	protected function UpdateClientId()
 	{
 		if($this->parent == null)
@@ -122,7 +125,6 @@ class dyspControl extends dyspRenderable
 		{
 			$this->OnRender();
 		}
-		//return "";
 	}
 	
 	protected function GenerateClientFunctionEventCall($eventName,$eventArg = "''")
@@ -163,7 +165,31 @@ class dyspRenderable
 		//Derived class does not neet return anything, just do echo.
 	}
 }
-
+class dyspControlStyle
+{
+	private $cssClass;
+	
+	public function SetCssClass($class)
+	{
+		$this->cssClass = $class;
+	}
+	public function GetCssClass($class)
+	{
+		return $this->cssClass;
+	}
+	public function GetHtmlAttributesDeclaration()
+	{
+		/*
+Note: Rendering MUST start with space and ends with space.
+*/
+		$ret = "";
+		if(!empty($this->cssClass))
+		{
+			$ret = " class=\"" . $this->cssClass . "\"";
+		}
+		return $ret;
+	}
+}
 class dyspStyleReference extends dyspRenderable
 {
 	private $url;

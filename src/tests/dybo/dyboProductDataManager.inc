@@ -1,5 +1,6 @@
 <?
-include_once("dybo/dyboDataManager.inc");
+require_once("../../dybo/dyboDataManager.inc");
+require_once("../testutil.inc");
 
 class ProductDataItem
 {
@@ -12,8 +13,12 @@ class dyboProductDataManager extends dyboDataManagerBase
 {
 	private $connection;
 	
-	public function __construct($connection)
+	public function __construct($connection = null)
 	{
+		if($connection == null)
+		{
+			$connection = testConnect();
+		}
 		parent::__construct($connection);
 	}
 	

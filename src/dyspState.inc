@@ -50,14 +50,14 @@ class dyspControlState
 			$this->container->Set($composedKey,"F");
 		}
 		else
-			$this->container->Set($composedKey,$value);
+			$this->container->Set($composedKey,"T");
 	}
 	public function GetBool($key,$unsetValue)
 	{
 		$composedKey = $this->getPropName($key);
 		$val =$this->container->Get($composedKey);
 		if($val == "F") return false;
-		else
+		else if($val == "T") return true;
 		return $unsetValue;
 	}
 	public function Get($key,$defaultVal)

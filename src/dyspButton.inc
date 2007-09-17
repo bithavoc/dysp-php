@@ -20,6 +20,7 @@ class dyspButton extends dyspControl
 	public function __construct($id)
 	{
 		parent::__construct($id);
+		$this->click = null;
 	}
 	public function SetClick(dyspEventHandler &$handler)
 	{
@@ -41,7 +42,12 @@ class dyspButton extends dyspControl
 		$text = $this->GetText();
 		$id = $this->GetClientId();
 		$script = $this->GenerateClientFunctionEventCall("Click");
-		echo "<input id=\"$id\" name=\"$id\" type=\"button\" onclick=\"javascript:$script\" value=\"$text\"/>";
+		$class = $this->GetCssClass();
+		if(!empty($class))
+		{
+			$class = " class=\"$class\" ";
+		}
+		echo "<input id=\"$id\" name=\"$id\" type=\"button\"$class onclick=\"javascript:$script\" value=\"$text\"/>";
 	} //OnRender method
 	
 	protected function OnLoad()
