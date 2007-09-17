@@ -7,11 +7,15 @@ class dyspForm extends dyspContainerControl
 	private $crypto;
 	private $title;
 	private $headers;//CSS Style List.(Generic Array)
-	
+	private $useCustomRender;
 	public function __construct($id,$cryptoString)
 	{
 		parent::__construct($id);
 		$this->crypto = new dyspCrypto($cryptoString);
+	}
+	public function EnableCustomRender()
+	{
+		$this->useCustomRender = true;
 	}
 	
 	public function AddHeadItem(dyspRenderable $item)
@@ -57,7 +61,10 @@ class dyspForm extends dyspContainerControl
 	{
 		parent::Render();
 	}
-	
+	protected function OnCustomRender()
+	{
+		
+	}
 	protected function OnRender()
 	{
 		$parts =Explode('/', $_SERVER["PHP_SELF"]);
@@ -70,17 +77,33 @@ class dyspForm extends dyspContainerControl
 		$lang = "en";
 		$title = $this->title;
 		$postName = dyspControl::PostNameKey;
+		$docRoot = SITE_URL_ROOT;
+		$formJsPath = SITE_URL_ROOT. "dyspForm.js";
 		echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
-					,   "\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"$lang\" lang=\"$lang\"><head><title>$title</title><script src=\"dyspForm.js\" type=\"text/javascript\"></script>";
-		if($this->headers != null && count($this->headers) > 0)
-		{
-			foreach($this->headers as $head)
+					,   "\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"$lang\" lang=\"$lang\"><head><title>$title</title><script src=\"$formJsPath\" type=\"text/javascript\"></script>";
+					
+	
+			if($this->headers != null && count($this->headers) > 0)
 			{
-				$head->Render();
+				foreach($this->headers as $head)
+				{
+					$head->Render();
+				}
 			}
-		}
+
+		
 		echo "</head><body><form method=\"post\" action=\"$file\" id=\"" . $this->GetClientId() . "\" name=\"" . $this->GetClientId() . "\"><input type=\"hidden\" name=\"formName\"/><input type=\"hidden\" name=\"$postName\"/><input type=\"hidden\" name=\"postArg\"/><input type=\"hidden\" name=\"controlId\"/>";
-		parent::OnRender();
+		
+		//This control can use Custom Render, when custom render is activated, no auto child rendering(parent::OnRender() => ContainerControl) is executed,
+		//instead, we call a custom function overridable by the derived class for this.
+		if(!$this->useCustomRender)
+		{
+			parent::OnRender();
+		}
+		else
+		{
+			$this->OnCustomRender();
+		}
 		$vstate = $this->crypto->Encrypt(serialize($this->GetViewState()->GetContainer()));
 		echo "<input type=\"hidden\" name=\"__viewState\" value=\"$vstate\"/></form></body></html>";
 		//return $val;

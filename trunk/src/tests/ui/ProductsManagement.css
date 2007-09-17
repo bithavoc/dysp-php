@@ -1,0 +1,73 @@
+.InputBox
+{
+	color: #000000;
+	background-color: #d3d3d3;
+	display: inline;
+		border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-width:1px;
+	width:100%;
+}
+.HelpPanel
+{
+	float: left;
+	width: 200px;
+	background-color:#a52a2a;
+	margin-left: 10px;
+	
+}
+.InputBox:focus
+{
+	color: #000000;
+	background-color: #e5e5e5;
+	display: inline;
+		border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-width:1px;
+}
+.Action
+{
+	color: #000000;
+	background-color: #d3d3d3;
+	display: inline;
+		border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-width:1px;
+}
+
+.Action:hover
+{
+	color: #000000;
+	background-color: #e5e5e5;
+	display: inline;
+		border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-width:1px;
+}
+.GridValueBack
+{
+	background-color: #d3d3d3;
+		border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-width:1px;
+}
+.Grid
+{
+	color: #2f2f2f;
+	background-color: #e7e7e7;
+}
+
+H1:hover
+{
+	color: #394e6a;
+}
