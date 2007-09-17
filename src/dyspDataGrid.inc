@@ -7,6 +7,7 @@ class dyspDataGrid extends dyspControl
 	private $dataSource;
 	private $itemStyle; //dyspControlStyle
 	private $style; //dyspControlStyle
+	private $headerStyle; //dyspControlStyle
 	
 	public function __construct($id)
 	{
@@ -15,9 +16,19 @@ class dyspDataGrid extends dyspControl
 	}
 	
 	//Add a new column to the grid.
-	public function AddColumn($name,$title)
+	public function AddColumn($name,$title,dyspControlStyle $headerStyle = null,dyspControlStyle $itemStyle = null)
 	{
-		$this->columns->append(new dyspDataColumn($name,$title));
+		$col = new dyspDataColumn($name,$title);
+		if($headerStyle != null)
+		{
+			$col->SetHeaderStyle($headerStyle);
+		}
+		if($itemStyle != null)
+		{
+			$col->SetItemStyle($itemStyle);
+		}
+		$this->columns->append($col);
+		return $col;
 	}
 	
 	public function SetDataSource($list)
@@ -25,6 +36,9 @@ class dyspDataGrid extends dyspControl
 		$this->dataSource = $list;
 	}
 	
+	/*
+	* Style
+	*/
 	public function SetStyle(dyspControlStyle $style)
 	{
 		$this->style = $style;
@@ -35,6 +49,9 @@ class dyspDataGrid extends dyspControl
 		return $this->style;
 	}
 	
+	/*
+	* ItemStyle
+	*/
 	public function SetItemStyle(dyspControlStyle $style)
 	{
 		$this->itemStyle = $style;
@@ -45,6 +62,22 @@ class dyspDataGrid extends dyspControl
 		return $this->itemStyle;
 	}
 	
+	/*
+	* HeaderStyle
+	*/
+	public function SetHeaderStyle(dyspControlStyle $style)
+	{
+		$this->headerStyle = $style;
+	}
+	
+	public function GetHeaderStyle()
+	{
+		return $this->headerStyle;
+	}
+	
+	/*
+	* OnRender
+	*/
 	protected function OnRender()
 	{
 		if($this->dataSource == null && $this->columns->count() == 0)
@@ -61,7 +94,10 @@ class dyspDataGrid extends dyspControl
 		$tableClassesDec = $this->style == null? "" : $this->style->GetHtmlAttributesDeclaration();
 		
 		echo "<table $tableClassesDec id=\"$id\" name=\"$id\"$class >";
-		echo "<tr>";
+		
+		$headerClassesDec = $this->headerStyle == null? "" : $this->headerStyle->GetHtmlAttributesDeclaration();
+		
+		echo "<tr$headerClassesDec>";
 		foreach($this->columns as $column)
 		{
 			echo "<td>";
@@ -74,12 +110,20 @@ class dyspDataGrid extends dyspControl
 		
 		foreach($this->dataSource as $item)
 		{
-			echo "<tr>";
+			echo "<tr$itemClassesDec>";
 			foreach($this->columns as $column)
 			{
-				echo "<td$itemClassesDec>";
-				
-				echo $item->{$column->GetName()};
+				$fieldName =$column->GetName();
+				$itCssClass = "";
+				if($column->HasItemStyle())
+				{
+					$itCssClass = $column->GetItemStyle()->GetHtmlAttributesDeclaration();
+				}
+				echo "<td$itCssClass>";
+				if(isset($item->{$fieldName})) //Note: only if the field exists, try to render the value.
+				{
+					echo $item->{$fieldName};
+				}
 				echo "</td>";
 			}
 			echo "</tr>";
@@ -92,6 +136,8 @@ class dyspDataColumn
 {
 	private $name;
 	private $title;
+	private $headerStyle;
+	private $itemStyle;
 	
 	public function __construct($name,$title)
 	{
@@ -105,6 +151,38 @@ class dyspDataColumn
 	public function GetTitle()
 	{
 		return $this->title;
+	}
+	
+	/*
+	* Header Style.
+	*/
+	public function SetHeaderStyle(dyspControlStyle $style)
+	{
+		$this->headerStyle = $style;
+	}
+	public function GetHeaderStyle()
+	{
+		return $this->headerStyle;
+	}
+	public function HasHeaderStyle()
+	{
+		return $this->headerStyle != null;
+	}
+	
+	/*
+	* Item Style.
+	*/
+	public function SetItemStyle(dyspControlStyle $style)
+	{
+		$this->itemStyle = $style;
+	}
+	public function GetItemStyle()
+	{
+		return $this->itemStyle;
+	}
+	public function HasItemStyle()
+	{
+		return $this->itemStyle != null;
 	}
 }
 ?>

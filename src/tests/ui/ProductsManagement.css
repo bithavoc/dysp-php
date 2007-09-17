@@ -61,12 +61,47 @@
 	border-left-width: 1px;
 	border-width:1px;
 }
+.GridValueBack:hover
+{
+	background-color: #DFDDDD;
+		border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-width:1px;
+}
+.GridNumericValueBack
+{
+	background-color: #d3d3d3;
+		border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-width:1px;
+	text-align:right;
+}
+.GridNumericValueBack:hover
+{
+	background-color: #DFDDDD;
+		border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-width:1px;
+	text-align:right;
+}
 .Grid
 {
 	color: #2f2f2f;
 	background-color: #e7e7e7;
 }
-
+.GridHeader
+{
+	color: #2f2f2f;
+	background-color: #e7e7e7;
+	font-weight: bold;
+	
+}
 H1:hover
 {
 	color: #394e6a;
