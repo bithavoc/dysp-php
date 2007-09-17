@@ -31,6 +31,7 @@ class dyboPgConnection extends dyboConnectionBase
 	protected function OnClose()
 	{
 		pg_close($this->connId);
+		$this->connId = 0;
 	}//OnClose method.
 	
 	public function _GETID()

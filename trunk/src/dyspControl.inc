@@ -168,15 +168,42 @@ class dyspRenderable
 class dyspControlStyle
 {
 	private $cssClass;
+	private $styleKeyValues;
 	
+	public function __construct($cssClass = null)
+	{
+		$this->cssClass = $cssClass;
+	}
+	
+	public function SetTextAlign($value)
+	{
+		self::SetProperty("text-align",$value);
+	}
+	
+	/*
+	* CssClass
+	*/
 	public function SetCssClass($class)
 	{
 		$this->cssClass = $class;
+		$this->styleKeyValues = array();
 	}
 	public function GetCssClass($class)
 	{
 		return $this->cssClass;
 	}
+	
+	/*
+	* SetProperty
+	*/
+	public function SetProperty($key,$value)
+	{
+		$this->styleKeyValues[$key] = $value;
+	}
+	
+	/*
+	* GetHTML Atts.
+	*/
 	public function GetHtmlAttributesDeclaration()
 	{
 		/*
@@ -186,6 +213,15 @@ Note: Rendering MUST start with space and ends with space.
 		if(!empty($this->cssClass))
 		{
 			$ret = " class=\"" . $this->cssClass . "\"";
+		}
+		if(count($this->styleKeyValues) > 0)
+		{
+			$ret .=" style=\"";
+			foreach($this->styleKeyValues as $key=>$value)
+			{
+				$ret .= $key . ":" . $value . ";";
+			}
+			$ret .= "\" ";
 		}
 		return $ret;
 	}

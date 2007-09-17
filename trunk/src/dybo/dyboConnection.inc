@@ -87,6 +87,7 @@ class dyboConnectionBase
 	{
 		$this->OnRollbackTransaction();
 	}
+	
 	public function OnRollbackTransaction()
 	{
 		//Derived classes must override this function.

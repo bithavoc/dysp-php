@@ -81,8 +81,10 @@ class ProductCreateForm extends dyspForm
 		</div>
 		<div style="width: 250px;background-color:#D0D03D">
 		<? $this->btnCreate->Render(); ?>
+		<a href="ProductListing.php">View List</a>
 		<? $this->lblFinalMessage->Render(); ?>
 		</div>
+		
 		<?
 	}
 	

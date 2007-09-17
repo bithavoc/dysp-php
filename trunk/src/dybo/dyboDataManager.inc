@@ -17,6 +17,13 @@ class dyboDataManagerBase
 		$cmd->SetCommandText($commandText);
 		$cmd->Execute();
 	}
+	
+	protected function ExecuteReader($commandText)
+	{
+		$cmd = $this->connection->CreateCommand();
+		$cmd->SetCommandText($commandText);
+		return $cmd->ExecuteReader();
+	}
 }
 
 ?>
