@@ -30,11 +30,12 @@ class dyboPgDataReader extends dyboDataReader
 		$this->rowsCount++;
 		return true;
 	}
-	public function OnGetValue($name)
+	public function OnGetValue($name,$defaultValue)
 	{
 		if(!isset($this->row->{$name}))
 		{
-			throw new dyboPgException("Field '$name' does not exist in query");
+			return $defaultValue;
+			//throw new dyboPgException("Field '$name' does not exist in query");
 		}
 		return $this->row->{$name};
 	}

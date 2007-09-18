@@ -21,12 +21,12 @@ class dyboDataReader
 		throw new dyboDataException("DataReader class does not implements Read Operation");
 	}
 	
-	public function GetValue($name)
+	public function GetValue($name,$defaultValue = null)
 	{
-		return $this->OnGetValue($name);
+		return $this->OnGetValue($name,$defaultValue);
 	}
 	
-	public function OnGetValue($name)
+	public function OnGetValue($name,$defaultValue)
 	{
 		throw new dyboDataException("DataReader class does not implements GetValue Operation");
 	}
