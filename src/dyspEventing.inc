@@ -12,7 +12,7 @@ class dyspEventHandler
 	
 	public function Invoke($args = null)
 	{
-			call_user_func(array(&$this->obj,$this->functionName));
+			call_user_func(array(&$this->obj,$this->functionName),$args);
 	}//Invoke function
 	
 }//JohanEventHandler class

@@ -1,13 +1,14 @@
 <?
 require_once("dyspControl.inc");
 
-class dyspDataGrid extends dyspControl
+class dyspDataGrid extends dyspContainerControl
 {
-	private $columns;
+	//private $columns;
 	private $dataSource;
 	private $itemStyle; //dyspControlStyle
 	private $style; //dyspControlStyle
 	private $headerStyle; //dyspControlStyle
+	private $keyName;
 	
 	public function __construct($id)
 	{
@@ -15,10 +16,18 @@ class dyspDataGrid extends dyspControl
 		$this->columns = new ArrayObject();
 	}
 	
+	public function AddColumnInstance(dyspDataColumn $col)
+	{
+		$col->__SETDG($this);
+		$this->Add($col);
+		//$this->columns->append($col);
+		return $col;
+	}
+	
 	//Add a new column to the grid.
 	public function AddColumn($name,$title,dyspControlStyle $headerStyle = null,dyspControlStyle $itemStyle = null)
 	{
-		$col = new dyspDataColumn($name,$title);
+		$col = new dyspTextColumn($name,$title);
 		if($headerStyle != null)
 		{
 			$col->SetHeaderStyle($headerStyle);
@@ -27,13 +36,23 @@ class dyspDataGrid extends dyspControl
 		{
 			$col->SetItemStyle($itemStyle);
 		}
-		$this->columns->append($col);
+		$this->AddColumnInstance($col);
 		return $col;
 	}
 	
 	public function SetDataSource($list)
 	{
 		$this->dataSource = $list;
+	}
+	
+	public function SetKeyName($name)
+	{
+		$this->keyName = $name;
+	}
+	
+	public function GetKeyName()
+	{
+		return $this->keyName;
 	}
 	
 	/*
@@ -75,6 +94,14 @@ class dyspDataGrid extends dyspControl
 		return $this->headerStyle;
 	}
 	
+	public function OnLoad()
+	{
+		foreach($this->GetChildren() as $column)
+		{
+			$column->ForceLoad();
+		}
+	}
+	
 	/*
 	* OnRender
 	*/
@@ -98,7 +125,7 @@ class dyspDataGrid extends dyspControl
 		$headerClassesDec = $this->headerStyle == null? "" : $this->headerStyle->GetHtmlAttributesDeclaration();
 		
 		echo "<tr$headerClassesDec>";
-		foreach($this->columns as $column)
+		foreach($this->GetChildren() as $column)
 		{
 			echo "<td>";
 			echo $column->GetTitle();
@@ -111,7 +138,7 @@ class dyspDataGrid extends dyspControl
 		foreach($this->dataSource as $item)
 		{
 			echo "<tr$itemClassesDec>";
-			foreach($this->columns as $column)
+			foreach($this->GetChildren() as $column)
 			{
 				$fieldName =$column->GetName();
 				$itCssClass = "";
@@ -120,29 +147,41 @@ class dyspDataGrid extends dyspControl
 					$itCssClass = $column->GetItemStyle()->GetHtmlAttributesDeclaration();
 				}
 				echo "<td$itCssClass>";
-				if(isset($item->{$fieldName})) //Note: only if the field exists, try to render the value.
-				{
-					echo $item->{$fieldName};
-				}
+				/*if(isset($item->{$fieldName})) //Note: only if the field exists, try to render the value.
+				{*/
+					$column->RenderValue($item); //let the column render byselft
+				/*}*/
 				echo "</td>";
 			}
 			echo "</tr>";
 		}
 		echo "</table>";
 	} //OnRender methods
-}
+	
+}//dyspDataGrid class
 
-class dyspDataColumn
+class dyspDataColumn extends dyspControl
 {
 	private $name;
 	private $title;
 	private $headerStyle;
 	private $itemStyle;
+	private $dataGrid;
 	
 	public function __construct($name,$title)
 	{
+		parent::__construct($name);
 		$this->name = $name;
 		$this->title = $title;
+	}
+	public function __SETDG($val)
+	{
+		//Set the datagrid.
+		$this->dataGrid = $val;
+	}
+	public function GetDataGrid()
+	{
+		return $this->dataGrid;
 	}
 	public function GetName()
 	{
@@ -176,13 +215,94 @@ class dyspDataColumn
 	{
 		$this->itemStyle = $style;
 	}
+	
 	public function GetItemStyle()
 	{
 		return $this->itemStyle;
 	}
+	
 	public function HasItemStyle()
 	{
 		return $this->itemStyle != null;
 	}
-}
+	
+	public function RenderValue($item)
+	{
+		throw new Exception("RenderValue is not implemented");
+	}
+	
+	protected function GetKeyValue($item)
+	{
+		return self::GetValue($item,$this->dataGrid->GetKeyName());
+	}
+	
+	protected function GetValue($item,$fieldName = null)
+	{
+		//Is null is passed, the value for the field is returned.
+		$_fieldName = $fieldName;
+		if($_fieldName == null)
+		{
+			$_fieldName = $this->name;
+		}
+		return $value =$item->{$_fieldName};
+	}
+	
+}//dyspDataColumn
+
+class dyspTextColumn extends dyspDataColumn
+{
+	public function __construct($name,$title)
+	{
+		parent::__construct($name,$title);
+	}
+	
+	public function RenderValue($item)
+	{
+		echo parent::GetValue($item); //Render the default value for the column.
+	}
+	
+}//dyspTextColumn
+
+class dyspLinkColumn extends dyspDataColumn
+{
+	//private $commandName;
+	private $click;
+	public function __construct($name,$title)
+	{
+		parent::__construct($name,$title);
+	}
+	public function SetClick(dyspEventHandler &$handler)
+	{
+		$this->click = &$handler;
+	}
+	protected function OnLoad()
+	{
+		if($this->GetForm()->IsPostBack())
+		{
+			if($this->IsEventFired("Click"))
+			{
+					if($this->click  != null)
+					{
+						$this->click->Invoke($this->GetEventArg());
+					}
+			}
+		}
+		parent::OnLoad();
+	}//OnExecute method
+	/*public function SetCommandName($name)
+	{
+		$this->commandName = $name;
+	}*/
+	
+	public function RenderValue($item)
+	{
+		parent::Render();
+		//$this->GetDataGrid()->
+		$jsCall =  parent::GenerateClientFunctionEventCall("Click",parent::GetKeyValue($item));
+		$text =parent::GetTitle();
+		echo "<a href=\"javascript:$jsCall\">$text</a>";
+	}
+	
+}//dyspLinkColumn
+
 ?>

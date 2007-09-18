@@ -59,7 +59,9 @@ class ProductListing extends dyspForm
 		$this->AddHeadItem(new dyspStyleReference("main","ProductsManagement.css"));
 		
 		$this->list = new dyspDataGrid("list");
+		$this->Add($this->list);
 		
+		$this->list->SetKeyName("Id");
 		$this->list->AddColumn("Id","Id");
 		$this->list->AddColumn("Name","Nombre");
 		$priceColumn = $this->list->AddColumn("Price","Precio",null,new dyspControlStyle());
@@ -70,23 +72,52 @@ class ProductListing extends dyspForm
 		$this->list->SetHeaderStyle(new dyspControlStyle("GridHeader"));
 		$this->list->SetItemStyle(new dyspControlStyle("GridValueBack"));
 		
-		$this->Add($this->list);
+		$deleteColumn = new dyspLinkColumn("deleteLink","Delete");
+		$deleteColumn->SetClick(new dyspEventHandler(&$this,"list_deleteItem"));
+		$this->list->AddColumnInstance($deleteColumn);
+		
+		$disableColumn = new dyspLinkColumn("disableLink","Disable");
+		$disableColumn->SetClick(new dyspEventHandler(&$this,"list_disableItem"));
+		$this->list->AddColumnInstance($disableColumn);
+	}
+	
+	function list_deleteItem($productId)
+	{
+		$manager = new dyboProductDataManager();
+		$manager->DeleteItem($productId);
+		$this->refreshList();
+	}
+	
+	function list_disableItem($productId)
+	{
+		$manager = new dyboProductDataManager();
+		$manager->DisableItem($productId);
+		$this->refreshList();
+	}
+	function refreshList()
+	{
+			$manager = new dyboProductDataManager();
+			$text =$this->txtSearch->GetText();
+			if(empty($text))
+			{
+				$this->list->SetDataSource($manager->GetList());
+			}
+			else
+			{
+				$this->list->SetDataSource($manager->GetList($text));
+			}
 	}
 	public function OnLoad()
 	{
 		parent::OnLoad();
 		if(!$this->IsPostBack())
 		{
-			$manager = new dyboProductDataManager();
-			
-			$this->list->SetDataSource($manager->GetList());
+			$this->refreshList();
 		}
 	}
 	function btnSearch_Click()
 	{
-		$manager = new dyboProductDataManager();
-		
-		$this->list->SetDataSource($manager->GetList($this->txtSearch->GetText()));
+		$this->refreshList();
 	}
 	protected function OnCustomRender()
 	{

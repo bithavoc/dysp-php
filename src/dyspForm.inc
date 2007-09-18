@@ -8,8 +8,10 @@ class dyspForm extends dyspContainerControl
 	private $title;
 	private $headers;//CSS Style List.(Generic Array)
 	private $useCustomRender;
+	//private $postName;
 	public function __construct($id,$cryptoString)
 	{
+		//$this->postName = $postName;
 		parent::__construct($id);
 		$this->crypto = new dyspCrypto($cryptoString);
 	}
@@ -68,12 +70,16 @@ class dyspForm extends dyspContainerControl
 	protected function OnRender()
 	{
 		$parts =Explode('/', $_SERVER["PHP_SELF"]);
-		$partIndex = count($parts) -1;
+		//print_r($parts);
+		$partIndex = count($parts) -1 ;
 		if(!isset($parts[$partIndex]))
 		{
 			throw new Exception("Can not get formAction");
 		}
 		$file = $parts[$partIndex];
+		
+		//$file = $this->postName;
+		//echo $file;
 		$lang = "en";
 		$title = $this->title;
 		$postName = dyspControl::PostNameKey;
