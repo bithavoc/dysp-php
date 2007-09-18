@@ -12,12 +12,14 @@ class dyspControl extends dyspRenderable
 	private $clientId;
 	private $viewState;
 	private $isInitiated;
+	private $isLoaded;
 	
 	const PostNameKey = "postName";//Event id;
 	
 	public function __construct($id)
 	{
 		parent::__construct($id);
+		$thid->isLoaded = false;
 	}
 	
 	public function SetVisible($val)
@@ -117,26 +119,52 @@ class dyspControl extends dyspRenderable
 		//Derived classes does not need return anything, just do echo.
 	}//OnRender
 	
-	public function Render()
+	public function ForceLoad()
 	{
 		$this->OnInit();
 		$this->OnLoad();
+		$this->isLoaded = true;
+	}
+	
+	public function Render()
+	{
+		if(!$this->isLoaded)
+		{
+			self::ForceLoad();
+		}
 		if($this->GetVisible())
 		{
 			$this->OnRender();
 		}
 	}
 	
-	protected function GenerateClientFunctionEventCall($eventName,$eventArg = "''")
+	public function GenerateClientFunctionEventCall($eventName,$eventArg = "''")
 	{
 		$formId = $this->GetForm()->GetClientId();
 		$clientId = $this->GetClientId();
 		return "dysp_submitFormArgs('$formId','$clientId','$eventName',$eventArg)";
 	}
 	
+	protected function GetEventArg()
+	{
+		return $_POST["postArg"];
+	}
+	
 	protected function IsEventFired($eventName)
 	{
-		return $this->IsPostBack() && $_POST["formName"] == $this->GetForm()->GetClientId() && $_POST[dyspControl::PostNameKey] == $eventName && $_POST["controlId"] == $this->GetClientId();
+		//echo $_POST["controlId"];
+		//echo "<br/>";
+		//echo $this->GetForm()->GetClientId();
+		/*echo "postback4Form=",$_POST["formName"] == $this->GetForm()->GetClientId();
+		echo " IsPostBack=",$this->IsPostBack();
+		echo " Is EventName =",$_POST[dyspControl::PostNameKey] == $eventName ;
+		echo " Is ControlId=",$_POST["controlId"] == $this->GetClientId();
+		echo " ControlId='",$_POST["controlId"],"'  ";
+		echo " ClientId='",$this->GetClientId(),"'
+*/
+		$val = $this->IsPostBack() && $_POST["formName"] == $this->GetForm()->GetClientId() && $_POST[dyspControl::PostNameKey] == $eventName && $_POST["controlId"] == $this->GetClientId();
+		//echo " IsEvent for CLick on Delete Column:$val<br/>";
+		return $val;
 	}
 	protected function GetPostValue($key = "")
 	{

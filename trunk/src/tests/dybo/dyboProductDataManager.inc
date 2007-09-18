@@ -29,11 +29,19 @@ class dyboProductDataManager extends dyboDataManagerBase
 		$price = $product->Price;
 		$this->Execute("Insert into products(name,price) Values('$name',$price);");
 	}
-	
+	public function DeleteItem($productId)
+	{
+		$this->Execute("DELETE FROM products where id = $productId;");
+	}
+	public function DisableItem($productId)
+	{
+		$this->Execute("UPDATE products SET is_disabled=true where id = $productId;");
+	}
 	public function GetList($text = "")
 	{
 		$list = new ArrayObject();
-		$query = empty($text) ? "SELECT id,name,price,is_disabled from products;": "SELECT id,name,price,is_disabled from products where name like '%$text%';";
+		$orderBy = " order by id asc";
+		$query = empty($text) ? "SELECT id,name,price,is_disabled from products $orderBy;": "SELECT id,name,price,is_disabled from products where name like '%$text%' $orderBy;";
 		$reader = $this->ExecuteReader($query);
 		while($reader->Read())
 		{

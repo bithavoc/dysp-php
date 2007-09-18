@@ -26,7 +26,10 @@ class dyspContainerControl extends dyspControl
 	{
 		$this->RenderChildren();
 	}
-	
+	protected function GetChildren()
+	{
+		return $this->children;
+	}
 	protected function RenderChildren()
 	{
 		foreach($this->children as $child)

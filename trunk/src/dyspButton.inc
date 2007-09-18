@@ -52,12 +52,15 @@ class dyspButton extends dyspControl
 	
 	protected function OnLoad()
 	{
-		if($this->IsEventFired("Click"))
+		if($this->GetForm()->IsPostBack())
 		{
-				if($this->click  != null)
-				{
-					$this->click->Invoke(null);
-				}
+			if($this->IsEventFired("Click"))
+			{
+					if($this->click  != null)
+					{
+						$this->click->Invoke(null);
+					}
+			}
 		}
 		parent::OnLoad();
 	}//OnExecute method
